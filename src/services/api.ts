@@ -9,6 +9,14 @@ interface UserData {
   password: string;
 }
 
+interface TestData {
+  name: string;
+  pdfUrl: string;
+  category: string;
+  discipline: string;
+  instructor: string;
+}
+
 function getConfig(token: string) {
   return {
     headers: {
@@ -19,6 +27,10 @@ function getConfig(token: string) {
 
 async function signUp(signUpData: UserData) {
   await baseAPI.post("/sign-up", signUpData);
+}
+
+async function createTest(createData: TestData) {
+  await baseAPI.post("/app/adicionar-prova", createData);
 }
 
 async function signIn(signInData: UserData) {
@@ -59,6 +71,7 @@ export interface Test {
   name: string;
   pdfUrl: string;
   category: Category;
+  
 }
 
 export type TestByDiscipline = Term & {
@@ -92,12 +105,25 @@ async function getCategories(token: string) {
   return baseAPI.get<{ categories: Category[] }>("/categories", config);
 }
 
+async function getDisciplines(token: string) {
+  const config = getConfig(token);
+  return baseAPI.get<{ disciplines: Discipline[] }>("/disciplines", config);
+}
+
+async function getTeachers( discipline: number, token: any) {
+  const config = getConfig(token);
+  return baseAPI.get(`/teachers/${discipline}`, config);
+}
+
 const api = {
   signUp,
   signIn,
   getTestsByDiscipline,
   getTestsByTeacher,
   getCategories,
+  createTest,
+  getDisciplines,
+  getTeachers
 };
 
 export default api;
