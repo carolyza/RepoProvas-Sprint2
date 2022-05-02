@@ -9,6 +9,7 @@ import {
   Link,
   TextField,
   Typography,
+  Autocomplete
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -27,6 +28,11 @@ function Instructors() {
     TestByTeacher[]
   >([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [search, setSearch] = useState("");
+  const [instructors, setInstructors] = useState([]);
+const teachers: string[] = [];
+  instructors.forEach((instructor:any)=> teachers.push(instructor.name));
+
 
   useEffect(() => {
     async function loadPage() {
@@ -42,10 +48,21 @@ function Instructors() {
 
   return (
     <>
+    <Autocomplete
+    disablePortal
+    id="combo-box-demo"
+    options={teachers}
+    sx={{marginX: "auto", marginBottom: "25px", width: "450px"}}
+    onInputChange={(e,value)=> setSearch(value)}
+    renderInput={(params:any)=>(
       <TextField
+      {...params}
         sx={{ marginX: "auto", marginBottom: "25px", width: "450px" }}
         label="Pesquise por pessoa instrutora"
       />
+    )}
+    />
+      
       <Divider sx={{ marginBottom: "35px" }} />
       <Box
         sx={{

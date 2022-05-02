@@ -9,13 +9,6 @@ interface UserData {
   password: string;
 }
 
-interface TestData {
-  name: string;
-  pdfUrl: string;
-  category: string;
-  discipline: string;
-  instructor: string;
-}
 
 function getConfig(token: string) {
   return {
@@ -73,7 +66,7 @@ export interface Test {
   name: string;
   pdfUrl: string;
   category: Category;
-  
+  views: number;
 }
 
 export type TestByDiscipline = Term & {
@@ -109,8 +102,9 @@ async function getCategories(token: string) {
 
 async function getDisciplines(token: string) {
   const config = getConfig(token);
-  return baseAPI.get<{ disciplines: Discipline[] }>("/disciplines", config);
+  return baseAPI.get("/disciplines", config);
 }
+//<{ disciplines: Discipline[] }>
 
 async function getTeachers( discipline: number, token: any) {
   const config = getConfig(token);

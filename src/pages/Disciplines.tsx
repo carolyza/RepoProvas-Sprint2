@@ -9,6 +9,7 @@ import {
   Link,
   TextField,
   Typography,
+  Autocomplete
 } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -26,12 +27,33 @@ function Disciplines() {
   const { token } = useAuth();
   const [terms, setTerms] = useState<TestByDiscipline[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [search, setSearch] = useState("");
+  const termsList = terms?.map((term) => term.disciplines);
+  const disciplinesName: string[] = [];
+  if (termsList) {
+    for (let terms of termsList) {
+      for (let discip of terms) {
+        disciplinesName.push(discip.name);
+      }
+    }
+  }
+  let filtered: any[]=[];
+
+  if(search){
+    terms.forEach((t)=> {
+      const filter = t.disciplines.filter((el)=> el.name === search);
+
+      if(filter.length !== 0 ) filtered.push(filter[0]);
+    });
+  }
 
   useEffect(() => {
     async function loadPage() {
       if (!token) return;
-
+      
       const { data: testsData } = await api.getTestsByDiscipline(token);
+      console.log(testsData);
+      
       setTerms(testsData.tests);
       const { data: categoriesData } = await api.getCategories(token);
       setCategories(categoriesData.categories);
@@ -41,10 +63,20 @@ function Disciplines() {
 
   return (
     <>
+    <Autocomplete
+    disablePortal
+    id="combo-box-demo"
+    options={disciplinesName}
+    sx={{marginX: "auto", marginBottom: "25px", width: "450px"}}
+    onInputChange={(e,value)=> setSearch(value)}
+    renderInput={(params:any)=>(
       <TextField
-        sx={{ marginX: "auto", marginBottom: "25px", width: "450px" }}
-        label="Pesquise por disciplina"
+      {...params}
+      sx={{marginX:"auto", marginBottom: "25px", width: "450px"}}
+      label= "Pesquise por disciplina"
       />
+    )}
+    />
       <Divider sx={{ marginBottom: "35px" }} />
       <Box
         sx={{
@@ -76,8 +108,14 @@ function Disciplines() {
             Adicionar
           </Button>
         </Box>
+        {!search ? (
         <TermsAccordions categories={categories} terms={terms} />
-      </Box>
+        ):(
+          <DisciplinesAccordions
+          categories={categories}
+          disciplines={filtered}
+          />
+        )}</Box>
     </>
   );
 }
