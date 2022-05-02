@@ -29,8 +29,10 @@ async function signUp(signUpData: UserData) {
   await baseAPI.post("/sign-up", signUpData);
 }
 
-async function createTest(createData: TestData) {
-  await baseAPI.post("/app/adicionar-prova", createData);
+async function createTest(createData: any , token: any) {
+  const config = getConfig(token);
+  console.log("banana");
+  await baseAPI.post("/app/adicionar-prova", createData, config);
 }
 
 async function signIn(signInData: UserData) {

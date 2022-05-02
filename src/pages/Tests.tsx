@@ -23,6 +23,7 @@ import api, {
   } from "../services/api";
 import Form from "../components/Form";
 import useAlert from "../hooks/useAlert";
+import e from "express";
 
 const styles = {
     container: {
@@ -60,6 +61,7 @@ function Tests() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [teachers, setTeachers] = useState([]);
+  
 
   useEffect(() => {
     async function loadPage() {
@@ -93,7 +95,8 @@ function Tests() {
     pdfUrl: "",
      category: "",
      discipline:"",
-     instructor:""
+     instructor:"",
+     views: 0
   });
 
 
@@ -111,36 +114,37 @@ function Tests() {
   interface FormData {
      name: string;
      pdfUrl: string;
-     category: string;
-discipline: string;
-instructor: string;
+     category: any;
+discipline: any;
+instructor: any;
+views: 0;
    }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
 
-      if(e.target.name ==="name"){
-          setName(e.target.value);
+      if(e.target.name =="name"){
+          setName(e.target.value );
       }
       else{
-          setpdfUrl(e.target.value);
+          setpdfUrl( e.target.value );
       }
-    //setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
   const handleChangeCategory = (event: SelectChangeEvent) => {
     setCategory(event.target.value as string);
+    setFormData({...formData, category: event.target.value});
   };
 
   const handleChangeDiscipline = (event: SelectChangeEvent) => {
     setDiscipline(event.target.value as string);
-    getTeachers(parseInt(event.target.value));     
+    getTeachers(parseInt(event.target.value)); 
+    setFormData({...formData, discipline: event.target.value});
   };
 
   async function getTeachers(discipline:number){
     try{
-      console.log(discipline);
       const { data: teachersData } = await api.getTeachers(discipline, token);
-      console.log(teachersData.teachers[0].teacher.name);
       setTeachers(teachersData.teachers);
       
     }
@@ -149,19 +153,18 @@ console.log(error);
     }
   }
 
-   {/* if(teachers.length!==0){
-console.log(teachers);
-  }  */}
 
   const handleChangeInstructor = (event: SelectChangeEvent) => {
     setInstructor(event.target.value as string);
+    setFormData({...formData, instructor: event.target.value});
   };
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage(null);
+    console.log(formData)
 
-   setFormData({ name: name, pdfUrl: pdfUrl, category: category, discipline: discipline, instructor: instructor });
+   setFormData({ name: name, pdfUrl: pdfUrl, category: parseInt(category), discipline: parseInt(discipline), instructor: parseInt(instructor), views: 0 });
 
     if (
       !formData?.name ||
@@ -174,10 +177,9 @@ console.log(teachers);
       return;
     }
 
-    //const { name, pdfUrl, category, discipline, instructor } = formData;
 
     try {
-      await api.createTest({ name, pdfUrl, category, discipline, instructor});
+      await api.createTest(formData, token);
       setMessage({ type: "success", text: "Cadastro efetuado com sucesso!" });
       navigate("/login");
     } catch (error: Error | AxiosError | any) {
@@ -261,7 +263,7 @@ console.log(teachers);
     onChange={handleChangeCategory}
   >
     {categories.map((c)=>
-    <MenuItem value={c.name}>{c.name}</MenuItem>
+    <MenuItem value={c.id}>{c.name}</MenuItem>
   )}
   </Select>
   <InputLabel id="discipline">Disciplina</InputLabel>
@@ -289,7 +291,9 @@ console.log(teachers);
     <MenuItem value={t.teacher.id}>{t.teacher.name}</MenuItem>
   )} 
   </Select>
-
+  <Button variant="contained" type="submit">
+            Enviar
+          </Button>
     </Form>
       </Box>
     </>
