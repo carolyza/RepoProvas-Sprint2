@@ -95,6 +95,11 @@ async function getTestsByTeacher(token: string) {
   );
 }
 
+async function countView(id:number, token:string){
+  const config = getConfig(token);
+  return baseAPI.patch(`/tests/${id}`, null, config);
+}
+
 async function getCategories(token: string) {
   const config = getConfig(token);
   return baseAPI.get<{ categories: Category[] }>("/categories", config);
@@ -119,7 +124,8 @@ const api = {
   getCategories,
   createTest,
   getDisciplines,
-  getTeachers
+  getTeachers,
+  countView
 };
 
 export default api;

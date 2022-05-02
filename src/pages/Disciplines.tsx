@@ -248,6 +248,15 @@ function Tests({
   categoryId,
   testsWithTeachers: testsWithDisciplines,
 }: TestsProps) {
+
+const {token} = useAuth();
+
+async function sumView(id:number){
+  if(!token) return;
+
+  await api.countView(id, token);
+}
+
   return (
     <>
       {testsWithDisciplines.map((testsWithDisciplines) =>
@@ -256,6 +265,7 @@ function Tests({
           .map((test) => (
             <Typography key={test.id} color="#878787">
               <Link
+              onClick={()=>sumView(test.id)}
                 href={test.pdfUrl}
                 target="_blank"
                 underline="none"

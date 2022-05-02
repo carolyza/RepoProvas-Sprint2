@@ -209,11 +209,21 @@ interface TestsProps {
 }
 
 function Tests({ tests, disciplineName }: TestsProps) {
+
+  const {token} = useAuth();
+
+  async function sumView(id:number){
+    if(!token) return;
+  
+    await api.countView(id, token);
+  }
+
   return (
     <>
       {tests.map((test) => (
         <Typography key={test.id} color="#878787">
           <Link
+          onClick={()=> sumView(test.id)}
             href={test.pdfUrl}
             target="_blank"
             underline="none"
