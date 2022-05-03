@@ -9,7 +9,6 @@ interface UserData {
   password: string;
 }
 
-
 function getConfig(token: string) {
   return {
     headers: {
@@ -22,9 +21,8 @@ async function signUp(signUpData: UserData) {
   await baseAPI.post("/sign-up", signUpData);
 }
 
-async function createTest(createData: any , token: any) {
+async function createTest(createData: any, token: any) {
   const config = getConfig(token);
-  console.log("banana");
   await baseAPI.post("/app/adicionar-prova", createData, config);
 }
 
@@ -95,7 +93,7 @@ async function getTestsByTeacher(token: string) {
   );
 }
 
-async function countView(id:number, token:string){
+async function countView(id: number, token: string) {
   const config = getConfig(token);
   return baseAPI.patch(`/tests/${id}`, null, config);
 }
@@ -109,9 +107,8 @@ async function getDisciplines(token: string) {
   const config = getConfig(token);
   return baseAPI.get("/disciplines", config);
 }
-//<{ disciplines: Discipline[] }>
 
-async function getTeachers( discipline: number, token: any) {
+async function getTeachers(discipline: number, token: any) {
   const config = getConfig(token);
   return baseAPI.get(`/teachers/${discipline}`, config);
 }
@@ -125,7 +122,7 @@ const api = {
   createTest,
   getDisciplines,
   getTeachers,
-  countView
+  countView,
 };
 
 export default api;

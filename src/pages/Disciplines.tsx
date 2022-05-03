@@ -52,7 +52,7 @@ function Disciplines() {
       if (!token) return;
       
       const { data: testsData } = await api.getTestsByDiscipline(token);
-      console.log(testsData);
+
       
       setTerms(testsData.tests);
       const { data: categoriesData } = await api.getCategories(token);
@@ -263,6 +263,13 @@ async function sumView(id:number){
         testsWithDisciplines.tests
           .filter((test) => testOfCategory(test, categoryId))
           .map((test) => (
+            <Box
+              sx={{
+                display: "flex",
+                width: "100%",
+                gap: "30px",
+              }}
+            >
             <Typography key={test.id} color="#878787">
               <Link
               onClick={()=>sumView(test.id)}
@@ -271,7 +278,10 @@ async function sumView(id:number){
                 underline="none"
                 color="inherit"
               >{`${test.name} (${testsWithDisciplines.teacherName})`}</Link>
+              
             </Typography>
+            <Typography>{`Visualizações:  ${test.views}`}</Typography>
+            </Box>
           ))
       )}
     </>

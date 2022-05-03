@@ -78,15 +78,6 @@ function Tests() {
     loadPage();
   }, [token]);
 
-//   const [testData, setTestData] = useState
-//         ({
-//       name: "",
-//       pdfUrl: "",
-//        category: "",
-//        discipline:"",
-//        instructor:""
-//     });
-
   
   const [formData, setFormData] = useState
    <FormData>
@@ -96,20 +87,9 @@ function Tests() {
      category: "",
      discipline:"",
      instructor:"",
-     views: 0
+    
   });
 
-
-  {/* useEffect(() =>      async function loadPage() { */}
-{/* //       if (!token) return;
-
-//       const { data: testsData } = await api.getTestsByDiscipline(token);
-//       setTerms(testsData.tests);
-//       const { data: categoriesData } = await api.getCategories(token);
-//       setCategories(categoriesData.categories);
-//     }
-//     loadPage();
-//   }, [token]); */}
 
   interface FormData {
      name: string;
@@ -117,7 +97,7 @@ function Tests() {
      category: any;
 discipline: any;
 instructor: any;
-views: 0;
+
    }
 
   function handleInputChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -162,9 +142,9 @@ console.log(error);
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setMessage(null);
-    console.log(formData)
+  
 
-   setFormData({ name: name, pdfUrl: pdfUrl, category: parseInt(category), discipline: parseInt(discipline), instructor: parseInt(instructor), views: 0 });
+   setFormData({ name: name, pdfUrl: pdfUrl, category: parseInt(category), discipline: parseInt(discipline), instructor: parseInt(instructor)});
 
     if (
       !formData?.name ||
@@ -181,7 +161,7 @@ console.log(error);
     try {
       await api.createTest(formData, token);
       setMessage({ type: "success", text: "Cadastro efetuado com sucesso!" });
-      navigate("/login");
+      navigate("/app/adicionar-prova");
     } catch (error: Error | AxiosError | any) {
       if (error.response) {
         setMessage({
@@ -220,7 +200,7 @@ console.log(error);
           }}
         >
           <Button
-            variant="contained"
+            variant="outlined"
             onClick={() => navigate("/app/disciplinas")}
           >
             Disciplinas
@@ -231,11 +211,21 @@ console.log(error);
           >
             Pessoa Instrutora
           </Button>
-          <Button variant="outlined" onClick={() => navigate("/app/adicionar-prova")}>
+          <Button variant="contained" onClick={() => navigate("/app/adicionar-prova")}>
             Adicionar
           </Button>
         </Box>
         <Form onSubmit={handleSubmit}>
+        <Box
+                        sx={{
+                            width: "80vw",
+                            maxWidth: "850px",
+                            display: "flex",
+                            flexDirection: "column",
+                            paddingBottom: "20vh",
+                            gap: "8px",
+                        }}
+                    >
         <TextField
           name="name"
           sx={styles.input}
@@ -294,6 +284,7 @@ console.log(error);
   <Button variant="contained" type="submit">
             Enviar
           </Button>
+          </Box>
     </Form>
       </Box>
     </>

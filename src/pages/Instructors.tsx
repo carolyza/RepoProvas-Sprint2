@@ -21,6 +21,7 @@ import api, {
   TestByTeacher,
 } from "../services/api";
 
+
 function Instructors() {
   const navigate = useNavigate();
   const { token } = useAuth();
@@ -90,7 +91,7 @@ const teachers: string[] = [];
           >
             Pessoa Instrutora
           </Button>
-          <Button variant="outlined" onClick={() => navigate("/app/adicionar")}>
+          <Button variant="outlined" onClick={() => navigate("/app/adicionar-prova")}>
             Adicionar
           </Button>
         </Box>
@@ -221,6 +222,13 @@ function Tests({ tests, disciplineName }: TestsProps) {
   return (
     <>
       {tests.map((test) => (
+          <Box
+          sx={{
+            display: "flex",
+            width: "100%",
+            gap: "30px",
+          }}
+        >
         <Typography key={test.id} color="#878787">
           <Link
           onClick={()=> sumView(test.id)}
@@ -229,7 +237,10 @@ function Tests({ tests, disciplineName }: TestsProps) {
             underline="none"
             color="inherit"
           >{`${test.name} (${disciplineName})`}</Link>
+          
         </Typography>
+        <Typography>{`Visualizações:  ${test.views}`}</Typography>
+        </Box>
       ))}
     </>
   );
